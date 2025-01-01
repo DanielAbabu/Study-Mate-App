@@ -15,16 +15,20 @@ class CourseEntity {
     required this.noteContent,
   });
 
-  factory CourseEntity.fromJson(Map<String, dynamic> json) {
-    return CourseEntity(
-      id: json['id'],
-      // date: json['created_at'],
-      title: json['title'],
-      questions: List<Map<String, dynamic>>.from(json['questions']),
-      cards: List<Map<String, String>>.from(json['cards']),
-      noteContent: json['note_content'],
-    );
-  }
+factory CourseEntity.fromJson(Map<String, dynamic> json) {
+  return CourseEntity(
+    id: json['id'],
+    title: json['title'],
+    questions: json['questions'] != null
+        ? List<Map<String, dynamic>>.from(json['questions'])
+        : [],
+    cards: json['cards'] != null
+        ? List<Map<String, String>>.from(json['cards'])
+        : [],
+    noteContent: json['note_content'] ?? '',
+  );
+}
+
 }
 
 

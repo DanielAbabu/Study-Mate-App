@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import '../services/api_services.dart';
+import 'dart:io';
 
 class UploadScreen extends StatefulWidget {
   @override
@@ -8,34 +10,38 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
   String? _filePath;
+  bool _isLoading = false;
 
-  // Function to pick a file
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+  void _uploadFile() async {
+    final apiService = ApiService();
 
-    if (result != null) {
-      setState(() {
-        // Use 'name' and 'bytes' for web and other platforms.
-        _filePath = result.files.single.name; // Get the file name
-        final fileBytes = result.files.single.bytes; // Access file content
+    // Show loading indicator
+    setState(() {
+      _isLoading = true;
+    });
 
-        // You can handle the bytes for upload if needed
-        if (fileBytes != null) {
-          // Simulate saving or uploading the fileBytes
-          print('File selected: $_filePath');
-        }
-      });
+    File? file = await apiService.pickFile();
+    if (file != null) {
+      String title = 'Course Title'; // Replace with actual title
+      int courseId = 1; // Replace with actual courseId
+
+      try {
+        String result = await apiService.uploadFile(courseId, title, file);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(result)));
+      } catch (error) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $error')));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('No file selected')));
     }
-  }
 
-  // Function to simulate file upload
-  Future<void> _uploadFile() async {
-    if (_filePath != null) {
-      // Simulate upload process with a delay
-      await Future.delayed(Duration(seconds: 3));
-      // Here you can add actual upload code (e.g., API call)
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File uploaded successfully!')));
-    }
+    // Hide loading indicator
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -54,39 +60,47 @@ class _UploadScreenState extends State<UploadScreen> {
             children: [
               Text(
                 'Choose a File to Upload',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              // Display selected file name or prompt for file selection
-              Text(
-                _filePath == null ? 'No file selected' : 'Selected file: ${_filePath!.split('/').last}',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _pickFile,
-                child: Text('Select File'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blueAccent,
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
                 ),
               ),
               SizedBox(height: 20),
+              Card(
+                margin: EdgeInsets.symmetric(vertical: 20),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    _filePath == null
+                        ? 'No file selected'
+                        : 'Selected file: ${_filePath!.split('/').last}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  ),
+                ),
+              ),
               ElevatedButton(
-                onPressed: _uploadFile,
+                onPressed: _isLoading ? null : _uploadFile,
                 child: Text('Upload File'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  backgroundColor: Colors.green,
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  textStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
               SizedBox(height: 20),
-              // Show progress indicator while uploading
-              if (_filePath != null)
-                CircularProgressIndicator(),
+              if (_isLoading)
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
             ],
           ),
         ),

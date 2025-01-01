@@ -4,6 +4,7 @@ import 'quiz_screen.dart';
 import 'note_summary_screen.dart';
 import '../entity/entities.dart';
 import '../services/api_services.dart'; // Ensure ApiService is imported
+
 class StudyDetailScreen extends StatelessWidget {
   final int id;
 
@@ -48,7 +49,6 @@ class StudyDetailScreen extends StatelessWidget {
                 children: [
                   NoteSummaryScreen(noteContent: course.noteContent),
                   FlipCardScreen(course: course),
-                  // Text(" "),
                   QuizScreen(course: course),
                 ],
               ),

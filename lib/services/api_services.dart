@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:file_picker/file_picker.dart';
 import 'dart:async';
 import '../entity/entities.dart';
 
@@ -59,7 +61,7 @@ Future<String> generateCard(int courseId) async {
     final url = Uri.parse('$baseApiUrl/courses/$courseId/generate-c');
 
     try {
-      final response = await http.get(url);
+      final response = await http.post(url);
       print(response.body);
 
 
@@ -84,7 +86,7 @@ Future<String> generateCard(int courseId) async {
     final url = Uri.parse('$baseApiUrl/courses/$courseId/generate-q');
 
     try {
-      final response = await http.get(url);
+      final response = await http.post(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -100,6 +102,45 @@ Future<String> generateCard(int courseId) async {
       }
     } catch (error) {
       throw Exception('Failed to generate question: $error');
+    }
+  }
+
+  // File upload implementation
+  Future<String> uploadFile(int courseId, String title, File file) async {
+    final url = Uri.parse('$baseApiUrl/courses/uploads/');
+
+    // Create the multipart request
+    var request = http.MultipartRequest('POST', url)
+      ..fields['title'] = title
+      ..files.add(await http.MultipartFile.fromPath('file', file.path));
+
+    try {
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> responseData = json.decode(responseBody);
+
+        return 'File uploaded successfully! File URL: ${responseData['file']}';
+
+      } else {
+        throw Exception('File upload failed with status: ${response.statusCode}');
+
+      }
+
+    } catch (error) {
+      throw Exception('Failed to upload file: $error');
+    }
+  }
+
+  // Helper method to pick file
+  Future<File?> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      return File(result.files.single.path!);
+    } else {
+      return null;
     }
   }
 
