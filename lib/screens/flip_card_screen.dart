@@ -47,31 +47,35 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children:[ course.cards != null && course.cards!.isNotEmpty
-          ? ListView.builder(
-              itemCount: course.cards!.length,
-              itemBuilder: (context, index) {
-                final card = course.cards![index];
-
-                return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FlipCardDetailScreen(
-                        cards: course.cards ?? [], // Handle nullable cards
+      children: [
+        course.cards != null && course.cards!.isNotEmpty
+            ? Expanded(
+                child: ListView.builder(
+                  itemCount: course.cards!.length,
+                  itemBuilder: (context, index) {
+                    final card = course.cards![index];
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlipCardDetailScreen(
+                            cards: course.cards ?? [],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  child: CardSet(id: index),
-                );
-              },
-            )
-          : Center(child: Text('No data available')),
-       FloatingActionButton(
-        onPressed: generateCards,
-        backgroundColor: Colors.green,
-        child: Icon(Icons.add, color: Colors.white),
-      ),
+                      child: CardSet(id: index),
+                    );
+                  },
+                ),
+              )
+            : Expanded(
+                child: Center(child: Text('No data available')),
+              ),
+        FloatingActionButton(
+          onPressed: generateCards,
+          backgroundColor: Colors.green,
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ],
     );
   }

@@ -34,7 +34,8 @@ class _UploadScreenState extends State<UploadScreen> {
       // Simulate upload process with a delay
       await Future.delayed(Duration(seconds: 3));
       // Here you can add actual upload code (e.g., API call)
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File uploaded successfully!')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('File uploaded successfully!')));
     }
   }
 
@@ -59,7 +60,9 @@ class _UploadScreenState extends State<UploadScreen> {
               SizedBox(height: 20),
               // Display selected file name or prompt for file selection
               Text(
-                _filePath == null ? 'No file selected' : 'Selected file: ${_filePath!.split('/').last}',
+                _filePath == null
+                    ? 'No file selected'
+                    : 'Selected file: ${_filePath!.split('/').last}',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
@@ -68,9 +71,10 @@ class _UploadScreenState extends State<UploadScreen> {
                 onPressed: _pickFile,
                 child: Text('Select File'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blueAccent,
+                  backgroundColor: Colors.blueAccent,
                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 20),
@@ -78,15 +82,15 @@ class _UploadScreenState extends State<UploadScreen> {
                 onPressed: _uploadFile,
                 child: Text('Upload File'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 20),
               // Show progress indicator while uploading
-              if (_filePath != null)
-                CircularProgressIndicator(),
+              if (_filePath != null) CircularProgressIndicator(),
             ],
           ),
         ),

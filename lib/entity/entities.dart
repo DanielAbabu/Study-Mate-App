@@ -1,14 +1,12 @@
 class CourseEntity {
   final int id;
-  // final String date;
   final String title;
-  final List<Map<String, dynamic>>? questions;
-  final List<Map<String, String>>? cards;
+  final List<Map<String, dynamic>> questions;
+  final List<Map<String, String>> cards;
   final String noteContent;
 
   CourseEntity({
     required this.id,
-    // required this.date,
     required this.title,
     required this.questions,
     required this.cards,
@@ -18,15 +16,25 @@ class CourseEntity {
   factory CourseEntity.fromJson(Map<String, dynamic> json) {
     return CourseEntity(
       id: json['id'],
-      // date: json['created_at'],
       title: json['title'],
-      questions: List<Map<String, dynamic>>.from(json['questions']),
-      cards: List<Map<String, String>>.from(json['cards']),
-      noteContent: json['note_content'],
+      questions: (json['questions'] as List<dynamic>? ?? [])
+          .expand((item) => item as List<dynamic>)
+          .map((item) => Map<String, dynamic>.from(item as Map))
+          .toList(),
+      // Explicitly parse cards as a List<Map<String, String>>
+      cards: (json['cards'] as List<dynamic>? ?? [])
+          .expand((item) => item as List<dynamic>)
+          .map((item) => (item as Map).map(
+                (key, value) => MapEntry(
+                  key.toString(),
+                  value.toString(),
+                ),
+              ))
+          .toList(),
+      noteContent: json['note_content'] ?? '',
     );
   }
 }
-
 
 class CourseCardEntity {
   final int id;
@@ -34,14 +42,11 @@ class CourseCardEntity {
   final String title;
   final String? file;
 
-
-  CourseCardEntity({
-    required this.id,
-    required this.date,
-    required this.title,
-    required this.file
-
-  });
+  CourseCardEntity(
+      {required this.id,
+      required this.date,
+      required this.title,
+      required this.file});
 
   factory CourseCardEntity.fromJson(Map<String, dynamic> json) {
     return CourseCardEntity(
@@ -49,7 +54,6 @@ class CourseCardEntity {
       date: json['created_at'],
       title: json['title'],
       file: json['file'],
-
     );
   }
 }

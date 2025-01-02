@@ -23,23 +23,21 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> generateQuestions() async {
-    final ApiService apiService = ApiService(); // Ensure ApiService is defined
+    final ApiService apiService = ApiService();
     try {
-      // Call the API to generate cards
       await apiService.generateQuestion(course.id);
 
-      // Fetch the updated course data
       final updatedCourse = await apiService.fetchCourse(course.id);
 
-      // Update the state with the new course data
       setState(() {
         course = updatedCourse;
       });
     } catch (error) {
-      // Handle any errors
       print("Error generating question cards: $error");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate question cards. Please try again.')),
+        SnackBar(
+            content:
+                Text('Failed to generate question cards. Please try again.')),
       );
     }
   }
@@ -47,31 +45,34 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children:[ course.questions != null && course.questions!.isNotEmpty
-          ? ListView.builder(
-              itemCount: course.questions!.length,
-              itemBuilder: (context, index) {
-                final card = course.questions![index];
+      children: [
+        Expanded(
+          child: course.questions != null && course.questions!.isNotEmpty
+              ? ListView.builder(
+                  itemCount: course.questions!.length,
+                  itemBuilder: (context, index) {
+                    final card = course.questions![index];
 
-                return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QuizDetailScreen(
-                        questions: course.questions ?? [], // Handle nullable cards
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuizDetailScreen(
+                            questions: course.questions ?? [],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  child: CardSet(id: index),
-                );
-              },
-            )
-          : Center(child: Text('No Questions available')),
-       FloatingActionButton(
-        onPressed: generateQuestions,
-        backgroundColor: Colors.green,
-        child: Icon(Icons.add, color: Colors.white),
-      ),
+                      child: CardSet(id: index),
+                    );
+                  },
+                )
+              : Center(child: Text('No Questions available')),
+        ),
+        FloatingActionButton(
+          onPressed: generateQuestions,
+          backgroundColor: Colors.green,
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ],
     );
   }

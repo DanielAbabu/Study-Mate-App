@@ -13,55 +13,50 @@ class ApiService {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-          // Parse the JSON response
-          final List<dynamic> responseData = json.decode(response.body);
+        // Parse the JSON as a List
+        final List<dynamic> responseData = json.decode(response.body);
 
-          // Extract the 'courses' list
-          final List<dynamic> coursesJson = responseData;
-
-          // Map JSON objects to CourseCardEntity instances
-          final courses = coursesJson
-              .map((courseJson) => CourseCardEntity.fromJson(courseJson))
-              .toList();
-
-          return courses;
-
+        // Map JSON objects to CourseCardEntity instances
+        return responseData
+            .map((courseJson) => CourseCardEntity.fromJson(courseJson))
+            .toList();
       } else {
-        throw Exception('Failed to load all courses. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load courses. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      throw Exception('Failed to load all courses: $error');
+      throw Exception('Failed to load courses: $error');
     }
   }
 
-  Future<CourseEntity> fetchCourse(int courseid) async {
-    final url = Uri.parse('$baseApiUrl/courses/$courseid');
+  Future<CourseEntity> fetchCourse(int courseId) async {
+    final url = Uri.parse('$baseApiUrl/courses/$courseId');
 
     try {
       final response = await http.get(url);
-      // print(response);
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+        // Decode the response as a Map
         final Map<String, dynamic> responseData = json.decode(response.body);
-        // print(responseData);
 
+        // Use the response directly (no "data" field in the JSON)
         return CourseEntity.fromJson(responseData);
       } else {
-        throw Exception('Failed to load course with ID: $courseid. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load course with ID: $courseId. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      throw Exception('Failed to load course with ID: $courseid: $error');
+      throw Exception('Failed to load course with ID: $courseId: $error');
     }
   }
 
-
-Future<String> generateCard(int courseId) async {
+  Future<String> generateCard(int courseId) async {
     final url = Uri.parse('$baseApiUrl/courses/$courseId/generate-c');
 
     try {
       final response = await http.get(url);
       print(response.body);
-
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -73,7 +68,8 @@ Future<String> generateCard(int courseId) async {
           throw Exception('Card generation failed');
         }
       } else {
-        throw Exception('Failed to generate card. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to generate card. Status code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Failed to generate card: $error');
@@ -96,12 +92,11 @@ Future<String> generateCard(int courseId) async {
           throw Exception('Question generation failed');
         }
       } else {
-        throw Exception('Failed to generate question. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to generate question. Status code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Failed to generate question: $error');
     }
   }
-
-
 }
