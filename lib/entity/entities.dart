@@ -1,34 +1,39 @@
 class CourseEntity {
   final int id;
-  // final String date;
   final String title;
-  final List<Map<String, dynamic>>? questions;
-  final List<Map<String, String>>? cards;
+  final List<List<Map<String, dynamic>>>? questions;
+  final List<List<Map<String, dynamic>>>? cards;
   final String noteContent;
 
   CourseEntity({
     required this.id,
-    // required this.date,
     required this.title,
     required this.questions,
     required this.cards,
     required this.noteContent,
   });
 
-factory CourseEntity.fromJson(Map<String, dynamic> json) {
-  return CourseEntity(
-    id: json['id'],
-    title: json['title'],
-    questions: json['questions'] != null
-        ? List<Map<String, dynamic>>.from(json['questions'])
-        : [],
-    cards: json['cards'] != null
-        ? List<Map<String, String>>.from(json['cards'])
-        : [],
-    noteContent: json['note_content'] ?? '',
-  );
-}
-
+  factory CourseEntity.fromJson(Map<String, dynamic> json) {
+    return CourseEntity(
+      id: json['id'],
+      title: json['title'],
+      questions: json['questions'] != null
+          ? (json['questions'] as List<dynamic>)
+              .map((nestedList) => (nestedList as List<dynamic>)
+                  .map((item) => item as Map<String, dynamic>)
+                  .toList())
+              .toList()
+          : [],
+      cards: json['cards'] != null
+          ? (json['cards'] as List<dynamic>)
+              .map((nestedList) => (nestedList as List<dynamic>)
+                  .map((item) => item as Map<String, dynamic>)
+                  .toList())
+              .toList()
+          : [],
+      noteContent: json['note_content'] ?? '',
+    );
+  }
 }
 
 

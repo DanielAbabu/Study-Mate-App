@@ -15,8 +15,8 @@ class _QuestionCardState extends State<QuestionCard> {
   @override
   Widget build(BuildContext context) {
     // Extract question text and answers from the map
-    String questionText = widget.question['questionText'];
-    List<dynamic> answers = widget.question['answers'];
+    String questionText = widget.question['question_text'] ?? "No question provided";
+    List<dynamic> answers = widget.question['answers'] ?? [];
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
@@ -42,14 +42,15 @@ class _QuestionCardState extends State<QuestionCard> {
             ),
             const SizedBox(height: 12.0),
             ...answers.map((answer) {
-              // Each answer is a map with 'text' and 'isCorrect' keys
-              String answerText = answer['text'];
-              bool isCorrect = answer['isCorrect'];
+              // Each answer is a map with 'text' and 'is_correct' keys
+              String answerText = answer['text'] ?? "No answer text provided";
+              bool isCorrect = answer['is_correct'] ?? false;
 
               Color getTextColor() {
                 if (selectedAnswer == null) return Colors.black;
-                if (selectedAnswer == answerText)
+                if (selectedAnswer == answerText) {
                   return isCorrect ? Colors.green : Colors.red;
+                }
                 if (isCorrect) return Colors.green;
                 return Colors.black;
               }

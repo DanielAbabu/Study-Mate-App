@@ -14,7 +14,6 @@ class DashboardScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Dashboard"),
-        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -60,9 +59,9 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
         shape: CircularNotchedRectangle(),
         notchMargin: 8.0,
+        color: Color(0xFF028960),
         child: Padding(
           padding: const EdgeInsets.all(20),
         ),
@@ -76,7 +75,7 @@ class DashboardScreen extends StatelessWidget {
             ),
           );
         },
-        backgroundColor: Colors.green,
+
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

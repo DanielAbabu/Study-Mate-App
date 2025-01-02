@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';// For Uint8List (Web)
+import 'dart:io'; // For File (Mobile)
+import 'package:flutter/foundation.dart'; // For checking if it's Web
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'dart:async';
@@ -36,26 +38,24 @@ class ApiService {
     }
   }
 
-  Future<CourseEntity> fetchCourse(int courseid) async {
-    final url = Uri.parse('$baseApiUrl/courses/$courseid');
 
-    try {
-      final response = await http.get(url);
-      // print(response);
+Future<CourseEntity> fetchCourse(int courseId) async {
+  final url = Uri.parse('$baseApiUrl/courses/$courseId');
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        // print(responseData);
+  try {
+    final response = await http.get(url);
 
-        return CourseEntity.fromJson(responseData);
-      } else {
-        throw Exception('Failed to load course with ID: $courseid. Status code: ${response.statusCode}');
-      }
-    } catch (error) {
-      throw Exception('Failed to load course with ID: $courseid: $error');
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      return CourseEntity.fromJson(responseData);
+    } else {
+      throw Exception(
+          'Failed to load course with ID: $courseId. Status code: ${response.statusCode}');
     }
+  } catch (error) {
+    throw Exception('Failed to load course with ID: $courseId: $error');
   }
-
+}
 
 Future<String> generateCard(int courseId) async {
     final url = Uri.parse('$baseApiUrl/courses/$courseId/generate-c');
@@ -105,29 +105,38 @@ Future<String> generateCard(int courseId) async {
     }
   }
 
-  // File upload implementation
-  Future<String> uploadFile(int courseId, String title, File file) async {
-    final url = Uri.parse('$baseApiUrl/courses/uploads/');
+   Future<String> uploadFile(String title, dynamic file) async {
+    final url = Uri.parse('$baseApiUrl/courses/uploads');
 
-    // Create the multipart request
     var request = http.MultipartRequest('POST', url)
-      ..fields['title'] = title
-      ..files.add(await http.MultipartFile.fromPath('file', file.path));
+      ..fields['title'] = title;
+    print(file);
+
+    if (file is File) {
+      // Mobile: Use file path for File
+      request.files.add(await http.MultipartFile.fromPath('file', file.path));
+
+    } else if (file is Uint8List) {
+      // Web: Use byte data for file
+      request.files.add(http.MultipartFile.fromBytes('file', file, filename: 'file'));
+
+    } else {
+      throw Exception('Unsupported file type');
+    }
+
 
     try {
       final response = await request.send();
+      print(response);
 
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
         final Map<String, dynamic> responseData = json.decode(responseBody);
 
         return 'File uploaded successfully! File URL: ${responseData['file']}';
-
       } else {
         throw Exception('File upload failed with status: ${response.statusCode}');
-
       }
-
     } catch (error) {
       throw Exception('Failed to upload file: $error');
     }

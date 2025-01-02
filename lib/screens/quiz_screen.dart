@@ -25,7 +25,7 @@ class _QuizScreenState extends State<QuizScreen> {
   Future<void> generateQuestions() async {
     final ApiService apiService = ApiService(); // Ensure ApiService is defined
     try {
-      // Call the API to generate cards
+      // Call the API to generate questions
       await apiService.generateQuestion(course.id);
 
       // Fetch the updated course data
@@ -37,28 +37,29 @@ class _QuizScreenState extends State<QuizScreen> {
       });
     } catch (error) {
       // Handle any errors
-      print("Error generating question cards: $error");
+      print("Error generating questions: $error");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate question cards. Please try again.')),
+        SnackBar(content: Text('Failed to generate questions. Please try again.')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children:[ course.questions != null && course.questions!.isNotEmpty
+    return Scaffold(
+
+      body: course.questions != null && course.questions!.isNotEmpty
           ? ListView.builder(
               itemCount: course.questions!.length,
               itemBuilder: (context, index) {
-                final card = course.questions![index];
+                final questionSet = course.questions![index];
 
                 return GestureDetector(
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => QuizDetailScreen(
-                        questions: course.questions ?? [], // Handle nullable cards
+                        questions: questionSet, // Pass the selected list of questions
                       ),
                     ),
                   ),
@@ -66,13 +67,14 @@ class _QuizScreenState extends State<QuizScreen> {
                 );
               },
             )
-          : Center(child: Text('No Questions available')),
-       FloatingActionButton(
+          : Center(
+              child: Text('No Questions available'),
+            ),
+      floatingActionButton: FloatingActionButton(
         onPressed: generateQuestions,
         backgroundColor: Colors.green,
         child: Icon(Icons.add, color: Colors.white),
       ),
-      ],
     );
   }
 }

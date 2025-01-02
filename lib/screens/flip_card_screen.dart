@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'flip_card_detail_screen.dart';
 import '../entity/entities.dart';
-import '../widgets/card_set.dart';
 import '../services/api_services.dart';
+
 
 class FlipCardScreen extends StatefulWidget {
   final CourseEntity course;
@@ -19,13 +19,13 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   @override
   void initState() {
     super.initState();
-    course = widget.course;
+    course = widget.course; // Initialize course from the widget
   }
 
   Future<void> generateCards() async {
     final ApiService apiService = ApiService(); // Ensure ApiService is defined
     try {
-      // Call the API to generate cards
+      // Call the API to generate questions
       await apiService.generateCard(course.id);
 
       // Fetch the updated course data
@@ -37,42 +37,42 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
       });
     } catch (error) {
       // Handle any errors
-      print("Error generating cards: $error");
+      print("Error generating questions: $error");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate cards. Please try again.')),
+        SnackBar(content: Text('Failed to generate questions. Please try again.')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children:[ course.cards != null && course.cards!.isNotEmpty
+    return Scaffold(
+      body: course.cards != null && course.cards!.isNotEmpty
           ? ListView.builder(
               itemCount: course.cards!.length,
-              itemBuilder: (context, index) {
-                final card = course.cards![index];
-
-                return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FlipCardDetailScreen(
-                        cards: course.cards ?? [], // Handle nullable cards
+              itemBuilder: (context, listIndex) {
+                return ListTile(
+                  title: Text('Card List ${listIndex + 1}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FlipCardDetailScreen(
+                          cards: course.cards![listIndex],
+                        ),
                       ),
-                    ),
-                  ),
-                  child: CardSet(id: index),
+                    );
+                  },
                 );
               },
             )
-          : Center(child: Text('No data available')),
-       FloatingActionButton(
+          : Center(child: Text('No card lists available')),
+
+      floatingActionButton: FloatingActionButton(
         onPressed: generateCards,
         backgroundColor: Colors.green,
         child: Icon(Icons.add, color: Colors.white),
       ),
-      ],
     );
   }
 }
