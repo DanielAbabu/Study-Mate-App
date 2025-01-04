@@ -6,8 +6,12 @@ import '../screens/study_detail_screen.dart';
 
 class CardSet extends StatelessWidget {
   final int id;
+  final String value;
 
-  CardSet({required this.id});
+  CardSet({
+    required this.value,
+    required this.id,
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,7 @@ class CardSet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Flip card content $id",
+                  "$value content $id",
                   style: TextStyle(
                     color: Colors.grey[800],
                     fontWeight: FontWeight.bold,

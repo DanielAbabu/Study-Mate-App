@@ -43,7 +43,7 @@ class StudySet extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: Colors.blue.shade100,
+                color: Colors.green.shade100,
               ),
               width: 50,
               height: 50,
@@ -65,22 +65,21 @@ class StudySet extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.grey[800],
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Category",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        "Study card",
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       Text(
-                        date,
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        date.substring(0, 10),
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                     ],
                   ),

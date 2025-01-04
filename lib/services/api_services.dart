@@ -7,7 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:async';
 import '../entity/entities.dart';
 
-const String baseApiUrl = "http://100.26.218.74:80";
+const String baseApiUrl = "http://35.174.204.131";
 
 class ApiService {
   Future<List<CourseCardEntity>> fetchAllCourses() async {
@@ -105,17 +105,15 @@ class ApiService {
     }
   }
 
-  Future<String> uploadFile(String title, dynamic file) async {
+  Future<CourseEntity> uploadFile(String title, dynamic file) async {
     final url = Uri.parse('$baseApiUrl/courses/uploads/');
 
     var request = http.MultipartRequest('POST', url)..fields['title'] = title;
-    print(file);
+    // print(file);
 
     if (file is File) {
-      // Mobile: Use file path for File
       request.files.add(await http.MultipartFile.fromPath('file', file.path));
     } else if (file is Uint8List) {
-      // Web: Use byte data for file
       request.files
           .add(http.MultipartFile.fromBytes('file', file, filename: 'file'));
     } else {
@@ -124,13 +122,14 @@ class ApiService {
 
     try {
       final response = await request.send();
-      print(response);
+      // print(response);
 
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
+        // final Map<String, dynamic> responseData = json.decode(responseBody);
         final Map<String, dynamic> responseData = json.decode(responseBody);
-
-        return 'File uploaded successfully! File URL: ${responseData['file']}';
+        return CourseEntity.fromJson(responseData);
+        // return 'File uploaded successfully! File URL: ${responseData['file']}';
       } else {
         throw Exception(
             'File upload failed with status: ${response.statusCode}');

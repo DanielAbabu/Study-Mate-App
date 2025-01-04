@@ -58,14 +58,14 @@ class DashboardScreen extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        color: Color(0xFF028960),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-        ),
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   shape: CircularNotchedRectangle(),
+      //   notchMargin: 8.0,
+      //   color: Color(0xFF028960),
+      //   child: Padding(
+      //     padding: const EdgeInsets.all(20),
+      //   ),
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

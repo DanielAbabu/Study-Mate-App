@@ -11,7 +11,7 @@ class PlantWateringApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner : false,
-      title: 'Study Buddy',
+      title: 'Study Mate',
       theme: ThemeData(
        primaryColor: Color(0xFF028960), // Set the primary color
         colorScheme: ColorScheme.fromSwatch(
@@ -35,9 +35,9 @@ class PlantWateringApp extends StatelessWidget {
           ),
         ),
         fontFamily: 'Outfit', // Set default font family
-        textTheme: ThemeData.light().textTheme.apply(
-              fontFamily: 'Outfit', // Apply to text theme
-            ),
+        // textTheme: ThemeData.light().textTheme.apply(
+        //       fontFamily: 'Outfit', // Apply to text theme
+        //     ),
       ),
       home: SplashScreen(),
     );

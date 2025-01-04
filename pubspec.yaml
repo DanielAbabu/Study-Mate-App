@@ -31,9 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flip_card: ^0.6.0
-  flutter_markdown: ^0.6.9
-  file_picker: ^5.0.1
+  flip_card: ^0.7.0
+  flutter_markdown: ^0.7.4+3
+  file_picker: ^8.1.7
   http: ^1.1.0
 
 
@@ -43,6 +43,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.2
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png"
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -61,6 +69,11 @@ flutter:
       fonts:
         - asset: assets/fonts/Outfit/static/OutfitBold.ttf
 
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/Open_Sans/static/OpenSans-Regular.ttf
+        - asset: assets/fonts/Open_Sans/static/OpenSans-Bold.ttf
+          weight: 700
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
