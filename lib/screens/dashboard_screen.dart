@@ -18,21 +18,16 @@ class DashboardScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: FutureBuilder<List<CourseCardEntity>>(
-
           future: apiService.fetchAllCourses(),
-
           builder: (context, snapshot) {
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
-
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-
             } else if (snapshot.hasData) {
               final courses = snapshot.data!;
 
-              return ListView.builder(
+              return Column(
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   final course = courses[index];
@@ -41,11 +36,12 @@ class DashboardScreen extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => StudyDetailScreen(id: course.id), // Use course.id
+                        builder: (context) =>
+                            StudyDetailScreen(id: course.id), // Use course.id
                       ),
                     ),
                     child: StudySet(
-                      id : course.id,
+                      id: course.id,
                       title: course.title, // Use course.title
                       date: course.date, // Use course.date
                     ),
@@ -58,14 +54,6 @@ class DashboardScreen extends StatelessWidget {
           },
         ),
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   notchMargin: 8.0,
-      //   color: Color(0xFF028960),
-      //   child: Padding(
-      //     padding: const EdgeInsets.all(20),
-      //   ),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -75,7 +63,6 @@ class DashboardScreen extends StatelessWidget {
             ),
           );
         },
-
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

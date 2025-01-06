@@ -4,8 +4,6 @@ import '../entity/entities.dart';
 import '../services/api_services.dart';
 import '../widgets/card_set.dart';
 
-
-
 class FlipCardScreen extends StatefulWidget {
   final CourseEntity course;
 
@@ -25,7 +23,6 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   }
 
   Future<void> generateCards() async {
-
     final ApiService apiService = ApiService();
 
     try {
@@ -36,11 +33,11 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
       setState(() {
         course = updatedCourse;
       });
-
     } catch (error) {
       print("Error generating questions: $error");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate questions. Please try again.')),
+        SnackBar(
+            content: Text('Failed to generate questions. Please try again.')),
       );
     }
   }
@@ -53,13 +50,23 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
               itemCount: course.cards!.length,
               itemBuilder: (context, listIndex) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // Add padding
-                  child: CardSet(value:"Flip card",id: listIndex+1)
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0), // Add padding
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FlipCardDetailScreen(
+                          cards: course.cards![listIndex],
+                        ),
+                      ),
+                    ),
+                    child: CardSet(value: "Question", id: listIndex + 1),
+                  ),
                 );
               },
             )
           : Center(child: Text('No card lists available')),
-
       floatingActionButton: FloatingActionButton(
         onPressed: generateCards,
         backgroundColor: Colors.green,

@@ -57,7 +57,7 @@ class ApiService {
   }
 
   Future<String> generateCard(int courseId) async {
-    final url = Uri.parse('$baseApiUrl/courses/$courseId/generate-c/');
+    final url = Uri.parse('$baseApiUrl/courses/$courseId/generate-c');
 
     try {
       final response = await http.post(url);

@@ -86,7 +86,6 @@ class _UploadScreenState extends State<UploadScreen> {
         );
 
         _navigateToCourseSection(id: uploadedCourse.id);
-
       } catch (error) {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
@@ -98,8 +97,6 @@ class _UploadScreenState extends State<UploadScreen> {
         SnackBar(content: Text('Please select a file before uploading.')),
       );
     }
-
-
 
     setState(() {
       _isLoading = false;
@@ -115,8 +112,9 @@ class _UploadScreenState extends State<UploadScreen> {
 
   void _navigateToCourseSection({required id}) {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => StudyDetailScreen(id:id)),
-      (route) => route.isFirst, // Ensures back navigation goes to the main screen
+      MaterialPageRoute(builder: (context) => StudyDetailScreen(id: id)),
+      (route) =>
+          route.isFirst, // Ensures back navigation goes to the main screen
     );
   }
 
@@ -161,7 +159,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       color: Colors.greenAccent.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color:Color(0xFF028960),
+                        color: Color(0xFF028960),
                         width: 2,
                       ),
                     ),
@@ -181,7 +179,8 @@ class _UploadScreenState extends State<UploadScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.check_circle, color: Colors.green),
+                      Icon(Icons.check_circle,
+                          color: const Color.fromARGB(255, 54, 67, 55)),
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
@@ -198,15 +197,15 @@ class _UploadScreenState extends State<UploadScreen> {
                   ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _filePath == null || _isLoading
-                      ? null
-                      : _uploadFile,
+                  onPressed:
+                      _filePath == null || _isLoading ? null : _uploadFile,
                   child: _isLoading
                       ? CircularProgressIndicator(color: Colors.white)
                       : Text('Upload File'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 42, vertical: 24),
-                    textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textStyle:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -215,21 +214,6 @@ class _UploadScreenState extends State<UploadScreen> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CourseSectionScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Course Section')),
-      body: Center(
-        child: Text(
-          'Welcome to the Course Section',
-          style: TextStyle(fontSize: 24),
         ),
       ),
     );
