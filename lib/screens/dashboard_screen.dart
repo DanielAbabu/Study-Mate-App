@@ -27,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
             } else if (snapshot.hasData) {
               final courses = snapshot.data!;
 
-              return Column(
+              return ListView.builder(
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   final course = courses[index];

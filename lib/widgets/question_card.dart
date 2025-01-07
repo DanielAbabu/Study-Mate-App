@@ -11,12 +11,20 @@ class QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<QuestionCard> {
   String? selectedAnswer;
+  late List<dynamic> answers;
+
+  @override
+  void initState() {
+    super.initState();
+    answers = List<dynamic>.from(widget.question['answers'] ?? []);
+    answers.shuffle();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Extract question text and answers from the map
-    String questionText = widget.question['question_text'] ?? "No question provided";
-    List<dynamic> answers = widget.question['answers'] ?? [];
+    String questionText =
+        widget.question['question_text'] ?? "No question provided";
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
